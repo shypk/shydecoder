@@ -35,7 +35,7 @@ static int s_swap(lua_State *L) {
     return 2;
 }
 
-static int s_decode(lua_State *L) {
+static int s_html_decode(lua_State *L) {
     size_t l = 0;
 
     const char* target = luaL_checklstring( L, 1, &l);
@@ -56,13 +56,13 @@ static int s_decode(lua_State *L) {
 //library to be registered
 static const struct luaL_Reg mylib [] = {
       {"swap", s_swap},
-      {"htmldecoder", s_decode},
+      {"html_decode", s_html_decode},
       {NULL, NULL}  /* sentinel */
     };
 
 //name of this function is not flexible
-int luaopen_htmldecoder(lua_State *L){
-    luaL_register(L, "htmldecoder", mylib);
+int luaopen_shydecoder(lua_State *L){
+    luaL_register(L, "shydecoder", mylib);
     return 1;
 }
 
