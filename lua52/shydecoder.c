@@ -19,6 +19,7 @@ extern "C"{
 
 #include "swap.h"
 #include "html.h"
+#include "escape.h"
 
 static int s_swap(lua_State *L) {
     //check and fetch the arguments
@@ -52,10 +53,29 @@ static int s_html_decode(lua_State *L) {
     return 2;
 }
 
+
+static int s_escape_decode(lua_State *L) {
+    size_t l = 0;
+
+    const char* target = luaL_checklstring( L, 1, &l);
+    int level = luaL_checkinteger (L, 2);
+    char ret[l];
+    ret[0] = '\0';
+    bool suc = false;
+    suc = escape_decode( target, level, ret );
+
+    //pushed string is copied and used on lua side
+    lua_pushstring(L, ret);
+    lua_pushboolean(L, suc);
+
+    return 2;
+}
+
 //library to be registered
 static const struct luaL_Reg mylib [] = {
       {"swap", s_swap},
       {"html_decode", s_html_decode},
+      {"escape_decode", s_escape_decode},
       {NULL, NULL}  /* sentinel */
     };
 
