@@ -5,6 +5,25 @@
 #include "escape.h"
 
 
+
+long strtol_unsafe( const char* str, int len ){
+    //                    0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
+	const int maptbl[] =   {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0, 0, 0, 0,
+                            0,10,11,12,13,14,15, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                            0,10,11,12,13,14,15, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                            };
+	long acc = 0;
+    for(int i = 0; i < len; i++ ){
+        acc <<= 4;
+        acc += maptbl[ (int) str[i] ];
+    }
+    return acc;
+}
+
 bool unicode_to_hex(long unicode, char* str, bool reverse) {
     if (unicode < 0x80) {
         str[0] = unicode;
@@ -114,7 +133,7 @@ bool escape_decode_2(const char* encoded, char* decoded ) {
                     if (( '0' <= encoded[i+3] && encoded[i+3] <= '9') ||
                         ('a' <= encoded[i+3] && encoded[i+3] <= 'f') ||
                         ('A' <= encoded[i+3] && encoded[i+3] <= 'F')) {
-                        decoded[j] = (char)strtol(&encoded[i+2], NULL, 16);
+                        decoded[j] = (char)strtol_unsafe(&encoded[i+2], 2);
                         i += 3;
                     } else {
                         decoded[j] = encoded[i];
@@ -135,7 +154,7 @@ bool escape_decode_2(const char* encoded, char* decoded ) {
                             if (( '0' <= encoded[i+5] && encoded[i+5] <= '9') ||
                                 ('a' <= encoded[i+5] && encoded[i+5] <= 'f') ||
                                 ('A' <= encoded[i+5] && encoded[i+5] <= 'F')) {
-                                long value = strtol(encoded + i+2, NULL, 16);
+                                long value = strtol_unsafe(&encoded[i+2], 4);
                                 size_t len = append_unicode( decoded, j, value );
                                 i += 5;
                                 j += (len-1);
@@ -170,7 +189,7 @@ bool escape_decode_2(const char* encoded, char* decoded ) {
                                     if (( '0' <= encoded[i+7] && encoded[i+7] <= '9') ||
                                         ('a' <= encoded[i+7] && encoded[i+7] <= 'f') ||
                                         ('A' <= encoded[i+7] && encoded[i+7] <= 'F')) {
-                                        long value = strtol(encoded + i+2, NULL, 16);
+                                        long value = strtol_unsafe(&encoded[i+2], 6);
                                         size_t len = append_unicode( decoded, j, value );
                                         i += 7;
                                         j += (len-1);
@@ -215,7 +234,7 @@ bool escape_decode_1(const char* encoded, char* decoded ) {
                     if (( '0' <= encoded[i+3] && encoded[i+3] <= '9') ||
                         ('a' <= encoded[i+3] && encoded[i+3] <= 'f') ||
                         ('A' <= encoded[i+3] && encoded[i+3] <= 'F')) {
-                        decoded[j] = (char)strtol(&encoded[i+2], NULL, 16);
+                        decoded[j] = (char)strtol_unsafe(&encoded[i+2], 2);
                         i += 3;
                     } else {
                         decoded[j] = encoded[i];
@@ -236,7 +255,7 @@ bool escape_decode_1(const char* encoded, char* decoded ) {
                             if (( '0' <= encoded[i+5] && encoded[i+5] <= '9') ||
                                 ('a' <= encoded[i+5] && encoded[i+5] <= 'f') ||
                                 ('A' <= encoded[i+5] && encoded[i+5] <= 'F')) {
-                                long value = strtol(encoded + i+2, NULL, 16);
+                                long value = strtol_unsafe(&encoded[i+2], 4);
                                 size_t len = append_unicode( decoded, j, value );
                                 i += 5;
                                 j += (len-1);
@@ -276,7 +295,7 @@ bool escape_decode_0(const char* encoded, char* decoded ) {
                     if (( '0' <= encoded[i+3] && encoded[i+3] <= '9') ||
                         ('a' <= encoded[i+3] && encoded[i+3] <= 'f') ||
                         ('A' <= encoded[i+3] && encoded[i+3] <= 'F')) {
-                        decoded[j] = (char)strtol(&encoded[i+2], NULL, 16);
+                        decoded[j] = (char)strtol_unsafe(&encoded[i+2], 2);
                         i += 3;
                     } else {
                         decoded[j] = encoded[i];
