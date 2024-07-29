@@ -17,9 +17,11 @@
 extern "C"{
 #endif
 
-#include "swap.h"
-#include "html.h"
+#include "base64.h"
 #include "escape.h"
+#include "html.h"
+#include "swap.h"
+#include "url.h"
 
 static int s_swap(lua_State *L) {
     //check and fetch the arguments
@@ -33,6 +35,41 @@ static int s_swap(lua_State *L) {
     lua_pushnumber(L, arg2);
 
     //return number of results
+    return 2;
+}
+
+
+static int s_base64_decode(lua_State *L) {
+    size_t l = 0;
+
+    const char* target = luaL_checklstring( L, 1, &l);
+    int level = luaL_checkinteger (L, 2);
+    char ret[l];
+    ret[0] = '\0';
+    bool suc = false;
+    suc = base64_decode( target, level, ret );
+
+    //pushed string is copied and used on lua side
+    lua_pushstring(L, ret);
+    lua_pushboolean(L, suc);
+
+    return 2;
+}
+
+static int s_escape_decode(lua_State *L) {
+    size_t l = 0;
+
+    const char* target = luaL_checklstring( L, 1, &l);
+    int level = luaL_checkinteger (L, 2);
+    char ret[l];
+    ret[0] = '\0';
+    bool suc = false;
+    suc = escape_decode( target, level, ret );
+
+    //pushed string is copied and used on lua side
+    lua_pushstring(L, ret);
+    lua_pushboolean(L, suc);
+
     return 2;
 }
 
@@ -54,7 +91,7 @@ static int s_html_decode(lua_State *L) {
 }
 
 
-static int s_escape_decode(lua_State *L) {
+static int s_url_decode(lua_State *L) {
     size_t l = 0;
 
     const char* target = luaL_checklstring( L, 1, &l);
@@ -62,7 +99,7 @@ static int s_escape_decode(lua_State *L) {
     char ret[l];
     ret[0] = '\0';
     bool suc = false;
-    suc = escape_decode( target, level, ret );
+    suc = url_decode( target, level, ret );
 
     //pushed string is copied and used on lua side
     lua_pushstring(L, ret);
@@ -74,8 +111,10 @@ static int s_escape_decode(lua_State *L) {
 //library to be registered
 static const struct luaL_Reg mylib [] = {
       {"swap", s_swap},
-      {"html_decode", s_html_decode},
+      {"base64_decode", s_base64_decode},
       {"escape_decode", s_escape_decode},
+      {"html_decode", s_html_decode},
+      {"url_decode", s_url_decode},
       {NULL, NULL}  /* sentinel */
     };
 
