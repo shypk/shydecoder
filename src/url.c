@@ -12,7 +12,10 @@ bool url_decode_0(const char* encoded, char* decoded ) {
 
     size_t i, j;
     for (i = 0, j = 0; i < len; i++, j++) {
-        if (encoded[i] == '%') {
+        if (encoded[i] == '+') {
+            decoded[j] = ' ';
+        } 
+        else if (encoded[i] == '%') {
             if (( '0' <= encoded[i+1] && encoded[i+1] <= '9') ||
                 ('a' <= encoded[i+1] && encoded[i+1] <= 'f') ||
                 ('A' <= encoded[i+1] && encoded[i+1] <= 'F')) {
@@ -27,7 +30,8 @@ bool url_decode_0(const char* encoded, char* decoded ) {
             } else {
                 decoded[j] = encoded[i];
             }
-        } else {
+        } 
+        else {
             decoded[j] = encoded[i];
         }
     }

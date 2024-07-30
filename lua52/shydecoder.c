@@ -22,6 +22,7 @@ extern "C"{
 #include "html.h"
 #include "swap.h"
 #include "url.h"
+#include "unify.h"
 
 static int s_swap(lua_State *L) {
     //check and fetch the arguments
@@ -47,6 +48,23 @@ static int s_base64_decode(lua_State *L) {
     ret[0] = '\0';
     bool suc = false;
     suc = base64_decode( target, level, ret );
+
+    //pushed string is copied and used on lua side
+    lua_pushstring(L, ret);
+    lua_pushboolean(L, suc);
+
+    return 2;
+}
+
+static int s_base64_decode_safe(lua_State *L) {
+    size_t l = 0;
+
+    const char* target = luaL_checklstring( L, 1, &l);
+    int level = luaL_checkinteger (L, 2);
+    char ret[l];
+    ret[0] = '\0';
+    bool suc = false;
+    suc = base64_decode_safe( target, level, ret );
 
     //pushed string is copied and used on lua side
     lua_pushstring(L, ret);
@@ -108,13 +126,32 @@ static int s_url_decode(lua_State *L) {
     return 2;
 }
 
+static int s_unify_decode(lua_State *L) {
+    size_t l = 0;
+
+    const char* target = luaL_checklstring( L, 1, &l);
+    int level = luaL_checkinteger (L, 2);
+    char ret[l];
+    ret[0] = '\0';
+    bool suc = false;
+    suc = unify_decode( target, level, ret );
+
+    //pushed string is copied and used on lua side
+    lua_pushstring(L, ret);
+    lua_pushboolean(L, suc);
+
+    return 2;
+}
+
 //library to be registered
 static const struct luaL_Reg mylib [] = {
       {"swap", s_swap},
       {"base64_decode", s_base64_decode},
+      {"base64_decode_safe", s_base64_decode_safe},
       {"escape_decode", s_escape_decode},
       {"html_decode", s_html_decode},
       {"url_decode", s_url_decode},
+      {"unify_decode", s_unify_decode},
       {NULL, NULL}  /* sentinel */
     };
 
