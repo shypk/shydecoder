@@ -28,14 +28,14 @@ void test_escape( const char* data, int level)
     printf( "done %d : %s\n", level, ret );
 }
 
-void test_url( const char* data, int level)
+void test_url( const char* data)
 {
     int limit = strlen(data);
     char ret[limit];
 
     printf( "orginal : %s\n", data);
-    url_decode( data, level, (char*)ret);
-    printf( "done %d : %s\n", level, ret );
+    url_decode( data, (char*)ret);
+    printf( "done : %s\n", ret );
 }
 
 void test_base64( const char* data)
@@ -92,7 +92,7 @@ int main() {
     printf( "====================================\n" );
     printf( "==  url test\n" );
     printf( "====================================\n" );
-    test_url("a onclick='\%F0\%9D\%95\%8Finner(\%27args\%27\%E3\%81\%82)'", 2);
+    test_url("a onclick='\%F0\%9D\%95\%8Finner(\%27args\%27\%E3\%81\%82)'" );
 
     printf( "====================================\n" );
     printf( "==  base64 test\n" );
@@ -101,12 +101,14 @@ int main() {
     test_base64("d2l0aOODj+ODg+ODlOODvA==");
     test_base64("44G+44GE44Ob44O844Og=\%25\%32");
     test_base64("d2l0aOODj+ODg+ODlOODvA===\%25\%32");
-
+    test_base64("{ ");
 
     printf( "====================================\n" );
     printf( "==  unify test\n" );
     printf( "====================================\n" );
     test_unify("&lt;a&nbsp;onclick=&quot;inner(&#x0027;args&#x01D54F;&#x0027;)&quot;&gt;\na onclick='\\U01D54Finner(\\x27args\\x27\\u3042)'\nas url = '\%F0\%9D\%95\%8Finner(\%27args\%27\%E3\%81\%82)'", 2);
+
+
 
     return 0;
 }

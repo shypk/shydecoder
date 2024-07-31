@@ -39,12 +39,7 @@ bool url_decode_0(const char* encoded, char* decoded ) {
     return true;
 }
 
-bool url_decode(const char* encoded, int level, char* decoded ) {
-    if (level == 0) {
-        return url_decode_0(encoded, decoded);
-    } else {
-        return url_decode_0(encoded, decoded);
-    }
+bool url_decode(const char* encoded, char* decoded ) {
 
-    return false;
+    return url_decode_0(encoded, decoded);
 }

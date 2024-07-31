@@ -111,11 +111,10 @@ static int s_url_decode(lua_State *L) {
     size_t l = 0;
 
     const char* target = luaL_checklstring( L, 1, &l);
-    int level = luaL_checkinteger (L, 2);
     char ret[l];
     ret[0] = '\0';
     bool suc = false;
-    suc = url_decode( target, level, ret );
+    suc = url_decode( target, ret );
 
     //pushed string is copied and used on lua side
     lua_pushstring(L, ret);

@@ -20,20 +20,20 @@ bool base64_decode_0(const char* encoded, char* decoded ) {
                                  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
                             };
                             
-    size_t len = strlen(encoded);
+    int len = strlen(encoded);
 
     size_t padding = 0;
+    if ( len == 0) return true;
     if ( len >= 1 && encoded[len - 1] == '=') padding++;
     if ( len >= 2 && encoded[len - 2] == '=') padding++;
 
-    size_t i = 0;
-    size_t j = 0;    
+    int i = 0;
+    int j = 0;    
     for ( i = 0; i < len-4; i += 4) {
         unsigned int val = (maptbl[(int)encoded[i]] << 18) |
                            (maptbl[(int)encoded[i+1]] << 12) |
                            (maptbl[(int)encoded[i+2]] << 6) |
                            maptbl[(int)encoded[i+3]];
-        
         decoded[j++] = (val >> 16) & 0xFF;
         decoded[j++] = (val >> 8) & 0xFF;
         decoded[j++] = val & 0xFF;
@@ -41,15 +41,17 @@ bool base64_decode_0(const char* encoded, char* decoded ) {
 
     // rest
     {
-        unsigned int val = (maptbl[(int)encoded[i]] << 18) |
-                           (maptbl[(int)encoded[i+1]] << 12) |
-                           (maptbl[(int)encoded[i+2]] << 6) |
-                           maptbl[(int)encoded[i+3]];
+        unsigned int val = 0;
+        if ( i < len )  val |= (maptbl[(int)encoded[i]] << 18);
+        if ( i+1 < len )  val |= (maptbl[(int)encoded[i+1]] << 12);
+        if ( i+2 < len )  val |= (maptbl[(int)encoded[i+2]] << 6);
+        if ( i+3 < len )  val |= (maptbl[(int)encoded[i+3]] );
         
-        decoded[j++] = (val >> 16) & 0xFF;
-        if (padding < 2) decoded[j++] = (val >> 8) & 0xFF;
-        if (padding < 1) decoded[j++] = val & 0xFF;
-        
+        if( val != 0 ) {
+            decoded[j++] = (val >> 16) & 0xFF;
+            if (padding < 2) decoded[j++] = (val >> 8) & 0xFF;
+            if (padding < 1) decoded[j++] = val & 0xFF;
+        }
     }
     
     decoded[j] = '\0';
@@ -70,14 +72,15 @@ bool base64_decode_1(const char* encoded, char* decoded ) {
                                 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0
                             };
                             
-    size_t len = strlen(encoded);
+    int len = strlen(encoded);
 
     size_t padding = 0;
+    if ( len == 0) return true;
     if ( len >= 1 && encoded[len - 1] == '=') padding++;
     if ( len >= 2 && encoded[len - 2] == '=') padding++;
 
-    size_t i = 0;
-    size_t j = 0;
+    int i = 0;
+    int j = 0;    
     for ( i = 0; i < len-4; i += 4) {
         char a = maptbl[(int)encoded[i]];
         char b = maptbl[(int)encoded[i+1]];
@@ -95,19 +98,29 @@ bool base64_decode_1(const char* encoded, char* decoded ) {
 
     // rest
     {
-        char a = maptbl[(int)encoded[i]];
-        char b = maptbl[(int)encoded[i+1]];
-        char c = maptbl[(int)encoded[i+2]];
-        char d = maptbl[(int)encoded[i+3]];
-        if (a == -1 || b == -1 || c == -1 || d == -1) {
-            return false;
+        unsigned int val = 0;
+        if ( i < len ){
+            if (maptbl[(int)encoded[i]] < 0) return false;
+            val |= (maptbl[(int)encoded[i]] << 18);
         }
-        unsigned int val = (a << 18) | (b << 12) | (c << 6) | d;
-        
-        decoded[j++] = (val >> 16) & 0xFF;
-        if (padding < 2) decoded[j++] = (val >> 8) & 0xFF;
-        if (padding < 1) decoded[j++] = val & 0xFF;
-        
+        if ( i+1 < len ){
+            if (maptbl[(int)encoded[i+1]] < 0) return false;
+            val |= (maptbl[(int)encoded[i+1]] << 12); 
+        } 
+        if ( i+2 < len ){
+            if (maptbl[(int)encoded[i+2]] < 0) return false;
+            val |= (maptbl[(int)encoded[i+2]] << 6);
+        }  
+        if ( i+3 < len ){
+            if (maptbl[(int)encoded[i+3]] < 0) return false;
+            val |= (maptbl[(int)encoded[i+3]] );
+        }
+
+        if( val != 0 ) {
+            decoded[j++] = (val >> 16) & 0xFF;
+            if (padding < 2) decoded[j++] = (val >> 8) & 0xFF;
+            if (padding < 1) decoded[j++] = val & 0xFF;
+        }
     }
     
     decoded[j] = '\0';
