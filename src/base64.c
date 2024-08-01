@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define ER 255
+
 
 bool base64_decode_0(const char* encoded, char* decoded ) {
                                 //0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15
@@ -61,16 +63,16 @@ bool base64_decode_0(const char* encoded, char* decoded ) {
 
 bool base64_decode_1(const char* encoded, char* decoded ) {
                                 //0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15
-    const char maptbl[256] = {  
-                                -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                                -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1,
-                                -1, -1,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1,
-                                -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1,  0, -1,
-                                -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                                -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                                -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                                -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0
-                            };
+    const unsigned char maptbl[256] = {  
+           		        ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER,
+                                ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, 62, ER, ER, ER, 63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, ER, ER, ER, ER, ER, ER,
+                                ER, ER,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, ER, ER, ER, ER, ER,
+                                ER, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, ER, ER, ER,  0, ER,
+                                ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER,
+                                ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER,
+                                ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER,
+                                ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER
+			    };
                             
     int len = strlen(encoded);
 
@@ -82,11 +84,11 @@ bool base64_decode_1(const char* encoded, char* decoded ) {
     int i = 0;
     int j = 0;    
     for ( i = 0; i < len-4; i += 4) {
-        char a = maptbl[(int)encoded[i]];
-        char b = maptbl[(int)encoded[i+1]];
-        char c = maptbl[(int)encoded[i+2]];
-        char d = maptbl[(int)encoded[i+3]];
-        if (a == -1 || b == -1 || c == -1 || d == -1) {
+        unsigned int a = maptbl[(int)encoded[i]];
+        unsigned int b = maptbl[(int)encoded[i+1]];
+        unsigned int c = maptbl[(int)encoded[i+2]];
+        unsigned int d = maptbl[(int)encoded[i+3]];
+        if (a == ER || b == ER || c == ER || d == ER) {
             return false;
         }
         unsigned int val = (a << 18) | (b << 12) | (c << 6) | d;
@@ -100,19 +102,19 @@ bool base64_decode_1(const char* encoded, char* decoded ) {
     {
         unsigned int val = 0;
         if ( i < len ){
-            if (maptbl[(int)encoded[i]] < 0) return false;
+            if (maptbl[(int)encoded[i]] == ER) return false;
             val |= (maptbl[(int)encoded[i]] << 18);
         }
         if ( i+1 < len ){
-            if (maptbl[(int)encoded[i+1]] < 0) return false;
+            if (maptbl[(int)encoded[i+1]] == ER) return false;
             val |= (maptbl[(int)encoded[i+1]] << 12); 
         } 
         if ( i+2 < len ){
-            if (maptbl[(int)encoded[i+2]] < 0) return false;
+            if (maptbl[(int)encoded[i+2]] == ER) return false;
             val |= (maptbl[(int)encoded[i+2]] << 6);
         }  
         if ( i+3 < len ){
-            if (maptbl[(int)encoded[i+3]] < 0) return false;
+            if (maptbl[(int)encoded[i+3]] == ER) return false;
             val |= (maptbl[(int)encoded[i+3]] );
         }
 
