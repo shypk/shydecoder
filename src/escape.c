@@ -2,14 +2,9 @@
 
 #include "util.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-
-bool escape_decode_2(const char* encoded, char* decoded ) {
-    size_t len = strlen(encoded);
-    size_t i, j;
+int escape_decode_2(const char* encoded, char* decoded ) {
+    unsigned len = shy_strlen(encoded);
+    unsigned i, j;
     for (i = 0, j = 0; i < len; i++, j++) {
         if (encoded[i] == '\\') {
             if (encoded[i+1] == 'x') {
@@ -41,7 +36,7 @@ bool escape_decode_2(const char* encoded, char* decoded ) {
                                 ('a' <= encoded[i+5] && encoded[i+5] <= 'f') ||
                                 ('A' <= encoded[i+5] && encoded[i+5] <= 'F')) {
                                 long value = strtol_unsafe(&encoded[i+2], 4);
-                                size_t len = append_unicode( decoded, j, value );
+                                unsigned len = append_unicode( decoded, j, value );
                                 i += 5;
                                 j += (len-1);
                             } else {
@@ -76,7 +71,7 @@ bool escape_decode_2(const char* encoded, char* decoded ) {
                                         ('a' <= encoded[i+7] && encoded[i+7] <= 'f') ||
                                         ('A' <= encoded[i+7] && encoded[i+7] <= 'F')) {
                                         long value = strtol_unsafe(&encoded[i+2], 6);
-                                        size_t len = append_unicode( decoded, j, value );
+                                        unsigned len = append_unicode( decoded, j, value );
                                         i += 7;
                                         j += (len-1);
                                     } else {
@@ -108,9 +103,9 @@ bool escape_decode_2(const char* encoded, char* decoded ) {
     return true;
 }
 
-bool escape_decode_1(const char* encoded, char* decoded ) {
-    size_t len = strlen(encoded);
-    size_t i, j;
+int escape_decode_1(const char* encoded, char* decoded ) {
+    unsigned len = shy_strlen(encoded);
+    unsigned i, j;
     for (i = 0, j = 0; i < len; i++, j++) {
         if (encoded[i] == '\\') {
             if (encoded[i+1] == 'x') {
@@ -142,7 +137,7 @@ bool escape_decode_1(const char* encoded, char* decoded ) {
                                 ('a' <= encoded[i+5] && encoded[i+5] <= 'f') ||
                                 ('A' <= encoded[i+5] && encoded[i+5] <= 'F')) {
                                 long value = strtol_unsafe(&encoded[i+2], 4);
-                                size_t len = append_unicode( decoded, j, value );
+                                unsigned len = append_unicode( decoded, j, value );
                                 i += 5;
                                 j += (len-1);
                             } else {
@@ -168,10 +163,10 @@ bool escape_decode_1(const char* encoded, char* decoded ) {
     return true;
 }
 
-bool escape_decode_0(const char* encoded, char* decoded ) {
-    size_t len = strlen(encoded);
+int escape_decode_0(const char* encoded, char* decoded ) {
+    unsigned len = shy_strlen(encoded);
 
-    size_t i, j;
+    unsigned i, j;
     for (i = 0, j = 0; i < len; i++, j++) {
         if (encoded[i] == '\\') {
             if (encoded[i+1] == 'x') {
@@ -200,7 +195,7 @@ bool escape_decode_0(const char* encoded, char* decoded ) {
     return true;
 }
 
-bool escape_decode(const char* encoded, int level, char* decoded ) {
+int escape_decode(const char* encoded, int level, char* decoded ) {
     if (level == 0) {
         return escape_decode_0(encoded, decoded);
     } else if (level == 1) {

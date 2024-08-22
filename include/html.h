@@ -2,7 +2,7 @@
 extern "C"{
 #endif
 
-bool html_decode(const char* encoded, int level, char* decoded );
+int html_decode(const char* encoded, int level, char* decoded );
 
 #ifdef __cplusplus
 }

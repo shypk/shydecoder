@@ -2,14 +2,10 @@
 
 #include "util.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #define ER 255
 
 
-bool base64_decode_0(const char* encoded, char* decoded ) {
+int base64_decode_0(const char* encoded, char* decoded ) {
                                 //0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15
     const char maptbl[256] = {  
                                  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
@@ -22,9 +18,9 @@ bool base64_decode_0(const char* encoded, char* decoded ) {
                                  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
                             };
                             
-    int len = strlen(encoded);
+    int len = shy_strlen(encoded);
 
-    size_t padding = 0;
+    unsigned padding = 0;
     if ( len == 0) return true;
     if ( len >= 1 && encoded[len - 1] == '=') padding++;
     if ( len >= 2 && encoded[len - 2] == '=') padding++;
@@ -61,7 +57,7 @@ bool base64_decode_0(const char* encoded, char* decoded ) {
 }
 
 
-bool base64_decode_1(const char* encoded, char* decoded ) {
+int base64_decode_1(const char* encoded, char* decoded ) {
                                 //0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15
     const unsigned char maptbl[256] = {  
            		        ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER,
@@ -74,9 +70,9 @@ bool base64_decode_1(const char* encoded, char* decoded ) {
                                 ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER
 			    };
                             
-    int len = strlen(encoded);
+    int len = shy_strlen(encoded);
 
-    size_t padding = 0;
+    unsigned padding = 0;
     if ( len == 0) return true;
     if ( len >= 1 && encoded[len - 1] == '=') padding++;
     if ( len >= 2 && encoded[len - 2] == '=') padding++;
@@ -130,11 +126,11 @@ bool base64_decode_1(const char* encoded, char* decoded ) {
 }
 
 
-bool base64_decode(const char* encoded, char* decoded ) {
+int base64_decode(const char* encoded, char* decoded ) {
     return base64_decode_0(encoded, decoded);
 }
 
 
-bool base64_decode_safe(const char* encoded, char* decoded ) {
+int base64_decode_safe(const char* encoded, char* decoded ) {
     return base64_decode_1(encoded, decoded);
 }

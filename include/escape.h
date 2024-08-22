@@ -2,7 +2,7 @@
 extern "C"{
 #endif
 
-bool escape_decode(const char* encoded, int level, char* decoded );
+int escape_decode(const char* encoded, int level, char* decoded );
 
 #ifdef __cplusplus
 }

@@ -2,15 +2,11 @@
 
 #include "util.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
+int url_decode_0(const char* encoded, char* decoded ) {
+    unsigned len = shy_strlen(encoded);
 
-bool url_decode_0(const char* encoded, char* decoded ) {
-    size_t len = strlen(encoded);
-
-    size_t i, j;
+    unsigned i, j;
     for (i = 0, j = 0; i < len; i++, j++) {
         if (encoded[i] == '+') {
             decoded[j] = ' ';
@@ -39,7 +35,7 @@ bool url_decode_0(const char* encoded, char* decoded ) {
     return true;
 }
 
-bool url_decode(const char* encoded, char* decoded ) {
+int url_decode(const char* encoded, char* decoded ) {
 
     return url_decode_0(encoded, decoded);
 }

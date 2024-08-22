@@ -2,7 +2,7 @@
 extern "C"{
 #endif
 
-bool unify_decode(const char* encoded, int level, char* decoded );
+int unify_decode(const char* encoded, int level, char* decoded );
 
 #ifdef __cplusplus
 }

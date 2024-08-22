@@ -2,7 +2,7 @@
 extern "C"{
 #endif
 
-bool url_decode(const char* encoded, char* decoded );
+int url_decode(const char* encoded, char* decoded );
 
 #ifdef __cplusplus
 }

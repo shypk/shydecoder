@@ -1,6 +1,31 @@
 #include "util.h"
 
-#include <cstring>
+long shy_strncpy(char* str1, const char* str2, long len) {
+    for (long i = 0; i < len; i++) {
+        str1[i] = str2[i];
+        if (str2[i] == '\0') {
+            return i;
+        }
+    }
+    return len;
+}
+
+long shy_strncmp(const char* str1, const char* str2, long len) {
+    for (long i = 0; i < len; i++) {
+        if (str1[i] != str2[i]) {
+            return str1[i] - str2[i];
+        }
+    }
+    return 0;
+}
+
+long shy_strlen(const char* str) {
+    long len = 0;
+    while (str[len] != '\0') {
+        len++;
+    }
+    return len;
+}
 
 long strtol_unsafe( const char* str, int len ){
     //                    0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
@@ -57,73 +82,7 @@ long strtol_10_unsafe( const char* str, int len ){
     return acc;
 }
 
-
-bool strtol_safe( const char* str, int& len ){
-    //                    0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
-	const int maptbl[256] =   {
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                            0, 1, 2, 3, 4, 5, 6, 7, 8, 9,-1,-1,-1,-1,-1,-1,
-                           -1,10,11,12,13,14,15,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                           -1,10,11,12,13,14,15,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                            };
-	long acc = 0;
-    for(int i = 0; i < len; i++ ){
-        acc <<= 4;
-        int val = maptbl[ (int) str[i] ];
-        if (val == -1) {
-            len = i;
-            return false;
-        }
-        acc += val;
-    }
-    return true;
-}
-
-bool strtol_10_safe( const char* str, int& len, long& acc ){
-    //                    0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
-	const int maptbl[256] =   {
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                            0, 1, 2, 3, 4, 5, 6, 7, 8, 9,-1,-1,-1,-1,-1,-1,
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                           -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                            };
-	acc = 0;
-    for(int i = 0; i < len; i++ ){
-        int val = maptbl[ (int) str[i] ];
-        if (val == -1) {
-            len = i;
-            return false;
-        }
-        acc *= 10;
-        acc += val;
-    }
-    return true;
-}
-
-bool unicode_to_hex(long unicode, char* str, bool reverse) {
+int unicode_to_hex(long unicode, char* str, int reverse) {
     if (unicode < 0x80) {
         str[0] = unicode;
         str[1] = '\0';
@@ -210,11 +169,11 @@ bool unicode_to_hex(long unicode, char* str, bool reverse) {
     return false;
 }
 
-size_t append_unicode(char* str, size_t index, long unicode) {
+unsigned append_unicode(char* str, unsigned index, long unicode) {
     char hex[7];
     unicode_to_hex(unicode, hex, false);
-    size_t len = strlen(hex);
-    for (size_t i = 0; i < len; i++) {
+    unsigned len = shy_strlen(hex);
+    for (unsigned i = 0; i < len; i++) {
         str[index + i] = hex[i];
     }
     return len;

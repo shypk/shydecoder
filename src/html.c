@@ -2,9 +2,6 @@
 
 #include "util.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 
 // html code table
@@ -46,46 +43,46 @@
 
 
 
-bool html_decode_2(const char* encoded, char* decoded ) {
-    size_t len = strlen(encoded);
+int html_decode_2(const char* encoded, char* decoded ) {
+    unsigned len = shy_strlen(encoded);
 
-    size_t i, j;
+    unsigned i, j;
     for (i = 0, j = 0; i < len; i++, j++) {
         if (encoded[i] == '&') {
             // major html codes
-            if (strncmp(&encoded[i], "&amp;", 5) == 0) {
+            if (shy_strncmp(&encoded[i], "&amp;", 5) == 0) {
                 decoded[j] = '&';
                 i += 4;
-            } else if (strncmp(&encoded[i], "&lt;", 4) == 0) {
+            } else if (shy_strncmp(&encoded[i], "&lt;", 4) == 0) {
                 decoded[j] = '<';
                 i += 3;
-            } else if (strncmp(&encoded[i], "&gt;", 4) == 0) {
+            } else if (shy_strncmp(&encoded[i], "&gt;", 4) == 0) {
                 decoded[j] = '>';
                 i += 3;
-            } else if (strncmp(&encoded[i], "&quot;", 6) == 0) {
+            } else if (shy_strncmp(&encoded[i], "&quot;", 6) == 0) {
                 decoded[j] = '"';
                 i += 5;
-            } else if (strncmp(&encoded[i], "&apos;", 6) == 0) {
+            } else if (shy_strncmp(&encoded[i], "&apos;", 6) == 0) {
                 decoded[j] = '\'';
                 i += 5;
-            } else if (strncmp(&encoded[i], "&plus;", 6) == 0) {
+            } else if (shy_strncmp(&encoded[i], "&plus;", 6) == 0) {
                 decoded[j] = '+';
                 i += 5;
-            } else if (strncmp(&encoded[i], "&equals;", 8) == 0) {
+            } else if (shy_strncmp(&encoded[i], "&equals;", 8) == 0) {
                 decoded[j] = '=';
                 i += 7;
             }
             // similar html codes
-             else if (strncmp(&encoded[i], "&nbsp;", 6) == 0) {
+             else if (shy_strncmp(&encoded[i], "&nbsp;", 6) == 0) {
                 decoded[j] = ' ';
                 i += 5;
-            } else if (strncmp(&encoded[i], "&minus;", 7) == 0) {
+            } else if (shy_strncmp(&encoded[i], "&minus;", 7) == 0) {
                 decoded[j] = '-';
                 i += 6;
             }
             // hex or decimal html codes
             else if (encoded[i+1] == '#') {
-                bool found = false;
+                int found = false;
 
                 // hex html codes
                 if (encoded[i+2] == 'x') {
@@ -96,7 +93,7 @@ bool html_decode_2(const char* encoded, char* decoded ) {
                             }
 
                             long value = strtol_unsafe(&encoded[i+3], k);
-                            size_t len = append_unicode( decoded, j, value );
+                            unsigned len = append_unicode( decoded, j, value );
                             i += k+3;
                             j += (len-1);
                             
@@ -124,7 +121,7 @@ bool html_decode_2(const char* encoded, char* decoded ) {
                             }
 
                             long value = strtol_10_unsafe(&encoded[i+2], k);
-                            size_t len = append_unicode( decoded, j, value );
+                            unsigned len = append_unicode( decoded, j, value );
                             i += k+2;
                             j += (len-1);
 
@@ -154,39 +151,39 @@ bool html_decode_2(const char* encoded, char* decoded ) {
     return true;
 }
 
-bool html_decode_1(const char* encoded, char* decoded ) {
-    size_t len = strlen(encoded);
+int html_decode_1(const char* encoded, char* decoded ) {
+    unsigned len = shy_strlen(encoded);
 
-    size_t i, j;
+    unsigned i, j;
     for (i = 0, j = 0; i < len; i++, j++) {
         if (encoded[i] == '&') {
             // major html codes
-            if (strncmp(&encoded[i], "&amp;", 5) == 0) {
+            if (shy_strncmp(&encoded[i], "&amp;", 5) == 0) {
                 decoded[j] = '&';
                 i += 4;
-            } else if (strncmp(&encoded[i], "&lt;", 4) == 0) {
+            } else if (shy_strncmp(&encoded[i], "&lt;", 4) == 0) {
                 decoded[j] = '<';
                 i += 3;
-            } else if (strncmp(&encoded[i], "&gt;", 4) == 0) {
+            } else if (shy_strncmp(&encoded[i], "&gt;", 4) == 0) {
                 decoded[j] = '>';
                 i += 3;
-            } else if (strncmp(&encoded[i], "&quot;", 6) == 0) {
+            } else if (shy_strncmp(&encoded[i], "&quot;", 6) == 0) {
                 decoded[j] = '"';
                 i += 5;
-            } else if (strncmp(&encoded[i], "&apos;", 6) == 0) {
+            } else if (shy_strncmp(&encoded[i], "&apos;", 6) == 0) {
                 decoded[j] = '\'';
                 i += 5;
-            } else if (strncmp(&encoded[i], "&plus;", 6) == 0) {
+            } else if (shy_strncmp(&encoded[i], "&plus;", 6) == 0) {
                 decoded[j] = '+';
                 i += 5;
-            } else if (strncmp(&encoded[i], "&equals;", 8) == 0) {
+            } else if (shy_strncmp(&encoded[i], "&equals;", 8) == 0) {
                 decoded[j] = '=';
                 i += 7;
             }
             
             // hex or decimal html codes
             else if (encoded[i+1] == '#') {
-                bool found = false;
+                int found = false;
 
                 // hex html codes
                 if (encoded[i+2] == 'x') {
@@ -196,9 +193,9 @@ bool html_decode_1(const char* encoded, char* decoded ) {
                                 break;
                             }
                             char hex[k+1];
-                            strncpy(hex, &encoded[i+3], k);
+                            shy_strncpy(hex, &encoded[i+3], k);
                             hex[k] = '\0';
-                            int value = strtol(hex, NULL, 16);
+                            int value = strtol_unsafe(hex, k);
                             decoded[j] = (char)value;
                             i += k+3;
                             found = true;
@@ -224,9 +221,9 @@ bool html_decode_1(const char* encoded, char* decoded ) {
                                 break;
                             }
                             char hex[k+1];
-                            strncpy(hex, &encoded[i+2], k);
+                            shy_strncpy(hex, &encoded[i+2], k);
                             hex[k] = '\0';
-                            int value = strtol(hex, NULL, 10);
+                            int value = strtol_10_unsafe(hex, k);
                             decoded[j] = (char)value;
                             i += k+2;
                             found = true;
@@ -256,32 +253,32 @@ bool html_decode_1(const char* encoded, char* decoded ) {
 }
 
 
-bool html_decode_0(const char* encoded, char* decoded ) {
-    size_t len = strlen(encoded);
+int html_decode_0(const char* encoded, char* decoded ) {
+    unsigned len = shy_strlen(encoded);
 
-    size_t i, j;
+    unsigned i, j;
     for (i = 0, j = 0; i < len; i++, j++) {
         if (encoded[i] == '&') {
             // major html codes
-            if (strncmp(&encoded[i], "&amp;", 5) == 0) {
+            if (shy_strncmp(&encoded[i], "&amp;", 5) == 0) {
                 decoded[j] = '&';
                 i += 4;
-            } else if (strncmp(&encoded[i], "&lt;", 4) == 0) {
+            } else if (shy_strncmp(&encoded[i], "&lt;", 4) == 0) {
                 decoded[j] = '<';
                 i += 3;
-            } else if (strncmp(&encoded[i], "&gt;", 4) == 0) {
+            } else if (shy_strncmp(&encoded[i], "&gt;", 4) == 0) {
                 decoded[j] = '>';
                 i += 3;
-            } else if (strncmp(&encoded[i], "&quot;", 6) == 0) {
+            } else if (shy_strncmp(&encoded[i], "&quot;", 6) == 0) {
                 decoded[j] = '"';
                 i += 5;
-            } else if (strncmp(&encoded[i], "&apos;", 6) == 0) {
+            } else if (shy_strncmp(&encoded[i], "&apos;", 6) == 0) {
                 decoded[j] = '\'';
                 i += 5;
-            } else if (strncmp(&encoded[i], "&plus;", 6) == 0) {
+            } else if (shy_strncmp(&encoded[i], "&plus;", 6) == 0) {
                 decoded[j] = '+';
                 i += 5;
-            } else if (strncmp(&encoded[i], "&equals;", 8) == 0) {
+            } else if (shy_strncmp(&encoded[i], "&equals;", 8) == 0) {
                 decoded[j] = '=';
                 i += 7;
             } else {
@@ -296,7 +293,7 @@ bool html_decode_0(const char* encoded, char* decoded ) {
     return true;
 }
 
-bool html_decode(const char* encoded, int level, char* decoded ) {
+int html_decode(const char* encoded, int level, char* decoded ) {
     if (level == 0) {
         return html_decode_0(encoded, decoded);
     } else if (level == 1) {
