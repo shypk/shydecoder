@@ -187,17 +187,17 @@ int html_decode_1(const char* encoded, char* decoded ) {
 
                 // hex html codes
                 if (encoded[i+2] == 'x') {
-                    for (int k = 0; k < 6; k++) {
+                    for (int k = 0; k < 7; k++) {
                         if (encoded[i+3+k] == ';') {
                             if (k == 0) {
                                 break;
                             }
-                            char hex[k+1];
-                            shy_strncpy(hex, &encoded[i+3], k);
-                            hex[k] = '\0';
-                            int value = strtol_unsafe(hex, k);
-                            decoded[j] = (char)value;
+
+                            long value = strtol_unsafe(&encoded[i+3], k);
+                            unsigned len = append_unicode( decoded, j, value );
                             i += k+3;
+                            j += (len-1);
+                            
                             found = true;
                             break;
                         }
@@ -215,17 +215,17 @@ int html_decode_1(const char* encoded, char* decoded ) {
 
                 // decimal html codes
                 else {
-                    for (int k = 0; k < 6; k++) {
+                    for (int k = 0; k < 7; k++) {
                         if (encoded[i+2+k] == ';') {
                             if (k == 0) {
                                 break;
                             }
-                            char hex[k+1];
-                            shy_strncpy(hex, &encoded[i+2], k);
-                            hex[k] = '\0';
-                            int value = strtol_10_unsafe(hex, k);
-                            decoded[j] = (char)value;
+
+                            long value = strtol_10_unsafe(&encoded[i+2], k);
+                            unsigned len = append_unicode( decoded, j, value );
                             i += k+2;
+                            j += (len-1);
+
                             found = true;
                             break;
                         }

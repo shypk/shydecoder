@@ -17,8 +17,10 @@ int unify_decode_2(const char* encoded, char* decoded ) {
                     if (( '0' <= encoded[i+3] && encoded[i+3] <= '9') ||
                         ('a' <= encoded[i+3] && encoded[i+3] <= 'f') ||
                         ('A' <= encoded[i+3] && encoded[i+3] <= 'F')) {
-                        decoded[j] = (char)strtol_unsafe(&encoded[i+2], 2);
+                        long value = (char)strtol_unsafe(&encoded[i+2], 2);
+                        unsigned long len = append_unicode( decoded, j, value );
                         i += 3;
+                        j += (len-1);
                     } else {
                         decoded[j] = encoded[i];
                     }
@@ -39,7 +41,7 @@ int unify_decode_2(const char* encoded, char* decoded ) {
                                 ('a' <= encoded[i+5] && encoded[i+5] <= 'f') ||
                                 ('A' <= encoded[i+5] && encoded[i+5] <= 'F')) {
                                 long value = strtol_unsafe(&encoded[i+2], 4);
-                                unsigned len = append_unicode( decoded, j, value );
+                                unsigned long len = append_unicode( decoded, j, value );
                                 i += 5;
                                 j += (len-1);
                             } else {
@@ -98,7 +100,7 @@ int unify_decode_2(const char* encoded, char* decoded ) {
             } else {
                 decoded[j] = encoded[i];
             }
-        } 
+        }
         
         // html_decode_2
         else if (encoded[i] == '&') {
@@ -191,16 +193,15 @@ int unify_decode_2(const char* encoded, char* decoded ) {
                 if (found == false) {
                     decoded[j] = encoded[i];
                 }
-
             } else {
                 decoded[j] = encoded[i];
             }
         }
-
         // url_decode_0
         else if (encoded[i] == '+') {
             decoded[j] = ' ';
         } 
+
         else if (encoded[i] == '%') {
             if (( '0' <= encoded[i+1] && encoded[i+1] <= '9') ||
                 ('a' <= encoded[i+1] && encoded[i+1] <= 'f') ||
@@ -208,8 +209,10 @@ int unify_decode_2(const char* encoded, char* decoded ) {
                 if (( '0' <= encoded[i+2] && encoded[i+2] <= '9') ||
                     ('a' <= encoded[i+2] && encoded[i+2] <= 'f') ||
                     ('A' <= encoded[i+2] && encoded[i+2] <= 'F')) {
-                    decoded[j] = (char)strtol_unsafe(&encoded[i+1], 2);
+                    long value = (char)strtol_unsafe(&encoded[i+1], 2);
+                    unsigned len = append_unicode( decoded, j, value );
                     i += 2;
+                    j += (len-1);
                 } else {
                     decoded[j] = encoded[i];
                 }

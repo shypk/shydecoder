@@ -14,8 +14,10 @@ int escape_decode_2(const char* encoded, char* decoded ) {
                     if (( '0' <= encoded[i+3] && encoded[i+3] <= '9') ||
                         ('a' <= encoded[i+3] && encoded[i+3] <= 'f') ||
                         ('A' <= encoded[i+3] && encoded[i+3] <= 'F')) {
-                        decoded[j] = (char)strtol_unsafe(&encoded[i+2], 2);
+                        long value = (char)strtol_unsafe(&encoded[i+2], 2);
+                        unsigned len = append_unicode( decoded, j, value );
                         i += 3;
+                        j += (len-1);
                     } else {
                         decoded[j] = encoded[i];
                     }
@@ -115,8 +117,10 @@ int escape_decode_1(const char* encoded, char* decoded ) {
                     if (( '0' <= encoded[i+3] && encoded[i+3] <= '9') ||
                         ('a' <= encoded[i+3] && encoded[i+3] <= 'f') ||
                         ('A' <= encoded[i+3] && encoded[i+3] <= 'F')) {
-                        decoded[j] = (char)strtol_unsafe(&encoded[i+2], 2);
+                        long value = (char)strtol_unsafe(&encoded[i+2], 2);
+                        unsigned len = append_unicode( decoded, j, value );
                         i += 3;
+                        j += (len-1);
                     } else {
                         decoded[j] = encoded[i];
                     }
@@ -176,8 +180,10 @@ int escape_decode_0(const char* encoded, char* decoded ) {
                     if (( '0' <= encoded[i+3] && encoded[i+3] <= '9') ||
                         ('a' <= encoded[i+3] && encoded[i+3] <= 'f') ||
                         ('A' <= encoded[i+3] && encoded[i+3] <= 'F')) {
-                        decoded[j] = (char)strtol_unsafe(&encoded[i+2], 2);
+                        long value = (char)strtol_unsafe(&encoded[i+2], 2);
+                        unsigned len = append_unicode( decoded, j, value );
                         i += 3;
+                        j += (len-1);
                     } else {
                         decoded[j] = encoded[i];
                     }

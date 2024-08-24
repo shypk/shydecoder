@@ -52,10 +52,12 @@ void test_unify( const char* data, int level)
 {
     int limit = strlen(data);
     char ret[limit];
+    char cpy[limit];
 
     printf( "orginal : %s\n", data);
     unify_decode( data, level, (char*)ret);
-    printf( "done %d : %s\n", level, ret );
+    strcpy(cpy, ret);
+    printf( "done %d : %s\n", level, cpy );
 }
 
 int main() {
@@ -106,8 +108,13 @@ int main() {
     printf( "====================================\n" );
     printf( "==  unify test\n" );
     printf( "====================================\n" );
-    test_unify("&lt;a&nbsp;onclick=&quot;inner(&#x0027;args&#x01D54F;&#x0027;)&quot;&gt;\na onclick='\\U01D54Finner(\\x27args\\x27\\u3042)'\nas url = '\%F0\%9D\%95\%8Finner(\%27args\%27\%E3\%81\%82)'", 2);
+    test_unify("&lt;a&nbsp;onclick=&quot;innekmr(&#x0027;args&#x01D54F;&#x0027;)&quot;&gt;\na onclick='\\U01D54Finner(\\x27args\\x27\\u3042)'\nas url = '\%F0\%9D\%95\%8Finner(\%27args\%27\%E3\%81\%82)'", 2);
 
+    printf( "====================================\n" );
+    printf( "==  skip ctrl char test\n" );
+    printf( "====================================\n" );
+    test_unify("&lt;a&nbsp;onclick=&quot;inner(&#x0027;args&#x01D54F;&#x0027;)&quot;&gt;\na onclick='\\U01D54Finner(\\x00args\\x27\\u3042)'\nas url = '\%F0\%9D\%95\%8Finner(\%27args\%27\%E3\%81\%82)'", 2);
+    test_unify("&lt;a&nbsp;onclick=&quot;inner(&#x0027;args&#x01D54F;&#x0027;)&quot;&gt;\na onclick='\\U01D54Finner(\\x27args\\x27\\u3042)'\nas url = '\%F0\%9D\%95\%8Finner(\%0aargs\%27\%E3\%81\%82)'", 2);
 
 
     return 0;

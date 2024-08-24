@@ -18,8 +18,10 @@ int url_decode_0(const char* encoded, char* decoded ) {
                 if (( '0' <= encoded[i+2] && encoded[i+2] <= '9') ||
                     ('a' <= encoded[i+2] && encoded[i+2] <= 'f') ||
                     ('A' <= encoded[i+2] && encoded[i+2] <= 'F')) {
-                    decoded[j] = (char)strtol_unsafe(&encoded[i+1], 2);
+                    long value = (char)strtol_unsafe(&encoded[i+1], 2);
+                    unsigned len = append_unicode( decoded, j, value );
                     i += 2;
+                    j += (len-1);
                 } else {
                     decoded[j] = encoded[i];
                 }
