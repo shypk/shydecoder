@@ -3,6 +3,7 @@
 #include "util.h"
 
 #define ER 255
+#define PAD 254
 
 
 int base64_decode_0(const char* encoded, char* decoded ) {
@@ -60,10 +61,10 @@ int base64_decode_0(const char* encoded, char* decoded ) {
 int base64_decode_1(const char* encoded, char* decoded ) {
                                 //0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15
     const unsigned char maptbl[256] = {  
-           		        ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER,
+                                ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER,
                                 ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, 62, ER, ER, ER, 63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, ER, ER, ER, ER, ER, ER,
-                                ER, ER,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, ER, ER, ER, ER, ER,
-                                ER, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, ER, ER, ER,  0, ER,
+                                ER,  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, ER, ER, ER, ER, ER,
+                                ER, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, ER, ER, ER, ER, ER,
                                 ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER,
                                 ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER,
                                 ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER,
@@ -125,6 +126,76 @@ int base64_decode_1(const char* encoded, char* decoded ) {
     return true;
 }
 
+int base64_decode_2(const char* encoded, char* decoded ) {
+                                //0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15
+    const unsigned char maptbl[256] = {
+                                ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER,
+                                ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, 62, ER, ER, ER, 63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, ER, ER, ER,PAD, ER, ER,
+                                ER,  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, ER, ER, ER, ER, ER,
+                                ER, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, ER, ER, ER, ER, ER,
+                                ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER,
+                                ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER,
+                                ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER,
+                                ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER, ER
+			    };
+    int len = shy_strlen(encoded);
+
+    unsigned padding = 0;
+    if ( len == 0) return true;
+
+    int i = 0;
+    int j = 0;
+    int count = 0;
+    unsigned int acc = 0;
+    for ( i = 0; i < len; i++) {
+        unsigned int a = maptbl[(int)encoded[i]];
+
+        if (a == ER) {
+            decoded[j++] = encoded[i];
+            count = 0;
+            acc = 0;
+            padding = 0;
+            continue;
+        }
+        else if (a == PAD) {
+            if (count != 0) {
+                for ( ; count < 4; count++) {
+                    acc = (acc << 6);
+                    padding++;
+                }
+            }
+        }
+        else {
+            count++;
+            acc = (acc << 6) | a;
+        }
+
+        if (count == 4) {
+            decoded[j++] = (acc >> 16) & 0xFF;
+            if( padding < 2 ) decoded[j++] = (acc >> 8) & 0xFF;
+            if( padding < 1 ) decoded[j++] = acc & 0xFF;
+            count = 0;
+            acc = 0;
+            padding = 0;
+        }
+    }
+
+    if (count != 0) {
+        for ( ; count < 4; count++) {
+            acc = (acc << 6);
+            padding++;
+        }
+    }
+
+    if (count == 4) {
+        decoded[j++] = (acc >> 16) & 0xFF;
+        if( padding < 2 ) decoded[j++] = (acc >> 8) & 0xFF;
+        if( padding < 1 ) decoded[j++] = acc & 0xFF;
+    }
+
+    decoded[j] = '\0';
+    return true;
+}
 
 int base64_decode(const char* encoded, char* decoded ) {
     return base64_decode_0(encoded, decoded);
@@ -133,4 +204,8 @@ int base64_decode(const char* encoded, char* decoded ) {
 
 int base64_decode_safe(const char* encoded, char* decoded ) {
     return base64_decode_1(encoded, decoded);
+}
+
+int base64_decode_forced(const char* encoded, char* decoded ) {
+    return base64_decode_2(encoded, decoded);
 }

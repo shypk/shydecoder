@@ -44,7 +44,7 @@ void test_base64( const char* data)
     char ret[limit];
 
     printf( "orginal : %s\n", data);
-    base64_decode( data, (char*)ret);
+    base64_decode_forced( data, (char*)ret);
     printf( "done : %s\n", ret );
 }
 
@@ -104,6 +104,11 @@ int main() {
     test_base64("44G+44GE44Ob44O844Og=\%25\%32");
     test_base64("d2l0aOODj+ODg+ODlOODvA===\%25\%32");
     test_base64("{ ");
+    test_base64("7JWI64WV7ZWY7IS47JqUPw==");
+    test_base64("7JWI64WV7ZWY7IS47JqUPw");
+    test_base64("7JWI64WV7ZWY7IS47JqUPw==@d2l0aOODj+ODg+ODlOODvA==44G+44GE44Ob44O844Og=&key=44G+44GE44Ob44O844Og=\%25\%32");
+    test_base64("d2l0aOODj+ODg+ODlOODvA==44G+44GE44Ob44O844Og=&key=44G+44GE44Ob44O844Og=\%25\%32");
+    test_base64("value=7JWI64WV7ZWY7IS47JqUPw==");
 
     printf( "====================================\n" );
     printf( "==  unify test\n" );
