@@ -87,6 +87,25 @@ static int s_base64_decode_forced(lua_State *L) {
     return 2;
 }
 
+static int s_base64_find_and_decode(lua_State *L) {
+    size_t l = 0;
+
+    const char* target = luaL_checklstring( L, 1, &l);
+    int offset = luaL_checkinteger (L, 2);
+    char ret[l];
+    int decoded_len = 0;
+    ret[decoded_len] = '\0';
+    int next = -1;
+    next = base64_find_and_decode( target, ret, offset, &decoded_len );
+
+    //pushed string is copied and used on lua side
+    lua_pushstring(L, ret);
+    lua_pushnumber(L, decoded_len);
+    lua_pushnumber(L, next);
+
+    return 3;
+}
+
 static int s_escape_decode(lua_State *L) {
     size_t l = 0;
 
@@ -161,6 +180,7 @@ static const struct luaL_Reg mylib [] = {
       {"base64_decode", s_base64_decode},
       {"base64_decode_safe", s_base64_decode_safe},
       {"base64_decode_forced", s_base64_decode_forced},
+      {"base64_find_and_decode", s_base64_find_and_decode},
       {"escape_decode", s_escape_decode},
       {"html_decode", s_html_decode},
       {"url_decode", s_url_decode},

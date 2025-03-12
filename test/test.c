@@ -45,7 +45,9 @@ void test_base64( const char* data)
 
     printf( "orginal : %s\n", data);
     base64_decode_forced( data, (char*)ret);
-    printf( "done : %s\n", ret );
+    printf( "forced : %s\n", ret );
+    base64_decode_extract( data, (char*)ret, ' ');
+    printf( "done   : %s\n", ret );
 }
 
 void test_unify( const char* data, int level)
@@ -103,12 +105,17 @@ int main() {
     test_base64("d2l0aOODj+ODg+ODlOODvA==");
     test_base64("44G+44GE44Ob44O844Og=\%25\%32");
     test_base64("d2l0aOODj+ODg+ODlOODvA===\%25\%32");
+    test_base64("\%25\%32");
     test_base64("{ ");
     test_base64("7JWI64WV7ZWY7IS47JqUPw==");
     test_base64("7JWI64WV7ZWY7IS47JqUPw");
     test_base64("7JWI64WV7ZWY7IS47JqUPw==@d2l0aOODj+ODg+ODlOODvA==44G+44GE44Ob44O844Og=&key=44G+44GE44Ob44O844Og=\%25\%32");
     test_base64("d2l0aOODj+ODg+ODlOODvA==44G+44GE44Ob44O844Og=&key=44G+44GE44Ob44O844Og=\%25\%32");
     test_base64("value=7JWI64WV7ZWY7IS47JqUPw==");
+    test_base64("edfc4247-2077-4c75-be3b-54b6d0d5192a");
+    test_base64("b074be0f-35e9-493c-ac90-c349ddd065bd");
+    test_base64("7JWI64WV7ZWY7IS47JqU&7JWI64WV7ZWY7IS47JqU&7JWI64WV7ZWY7IS47JqU");
+    test_base64("target=c29tZSBzZWxlY3QgbmVlZGxlbmMo");
 
     printf( "====================================\n" );
     printf( "==  unify test\n" );
