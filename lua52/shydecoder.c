@@ -106,6 +106,26 @@ static int s_base64_find_and_decode(lua_State *L) {
     return 3;
 }
 
+static int s_base64_decode_extract(lua_State *L) {
+    size_t l = 0;
+
+    const char* target = luaL_checklstring( L, 1, &l);
+    int separator = luaL_checkinteger (L, 2);
+    if( separator < 0 || separator > 255 ) {
+        luaL_error(L, "Invalid separator");
+    }
+    char ret[l];
+    ret[0] = '\0';
+    bool suc = false;
+    suc = base64_decode_extract( target, ret, (char)separator );
+
+    //pushed string is copied and used on lua side
+    lua_pushstring(L, ret);
+    lua_pushboolean(L, suc);
+
+    return 2;
+}
+
 static int s_escape_decode(lua_State *L) {
     size_t l = 0;
 
@@ -181,6 +201,7 @@ static const struct luaL_Reg mylib [] = {
       {"base64_decode_safe", s_base64_decode_safe},
       {"base64_decode_forced", s_base64_decode_forced},
       {"base64_find_and_decode", s_base64_find_and_decode},
+      {"base64_decode_extract", s_base64_decode_extract},
       {"escape_decode", s_escape_decode},
       {"html_decode", s_html_decode},
       {"url_decode", s_url_decode},
